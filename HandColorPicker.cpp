@@ -38,4 +38,4 @@ Scalar HandColorPicker::getMeanColor(Mat frame, Rect square) {
 }
 
 //vector<Point2d> HandColorPicker::sizeDivisors = { Point2d(3,4),Point2d(4,2),Point2d(3,1.5), Point2d(2, 2), Point2d(2.5, 2.5), Point2d(2, 1.5), Point2d(2.5, 1.8)};
-vector<Point2d> HandColorPicker::sizeDivisors = { Point2d(4,2),Point2d(3,1.5), Point2d(2, 2), Point2d(2.5, 2.5), Point2d(2, 1.5), Point2d(2.5, 1.8)};
+vector<Point2d> HandColorPicker::sizeDivisors = { Point2d(2,2),Point2d(3,2), Point2d(4, 2), Point2d(2, 3), Point2d(3, 3), Point2d(4, 3),Point2d(3,2.5)};

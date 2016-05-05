@@ -72,14 +72,15 @@ int main(int, char**)
 //			output.copyTo(output1(Rect(Point(z,0), output.size())));
 //			z += output.size().width;
 //		}
-		cvtColor(frame, frame,COLOR_BGR2HLS);
+		Mat copy;
+		cvtColor(frame, copy,COLOR_BGR2HLS);
 //		if(xxx++ < 100)
 //			means = hcp.getMeanColors(frame);
-		bs.binarize(frame, output, means);
+		bs.binarize(copy, output, means);
 //		int nz = countNonZero(output);
-//		dilate(output,output, Mat(Size(6,6),CV_8U));
+//		dilate(output,output, Mat(Size(3,3),CV_8U));
 		medianBlur(output, output, 7);
-		cvtColor(frame, frame,COLOR_HLS2BGR);
+//		cvtColor(frame, frame,COLOR_HLS2BGR);
 
 //		resize(output, output, frame.size() / 3);
 //		output.copyTo(output1(Rect(Point(z, 0), output.size())));
@@ -103,18 +104,20 @@ int main(int, char**)
 //		//Canny(output, output, 10,20, 3);
 		findContours(output, contours, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_NONE);
 		
-		sort(contours.begin(), contours.end(), [=](vector<Point> x, vector<Point> y) -> double {return contourArea(y) < contourArea(x); });
+		partial_sort(contours.begin(), contours.begin() + 3, contours.end(), [=](vector<Point> x, vector<Point> y) -> double {return contourArea(y) < contourArea(x); });
 		for (int i = 0; i < min((size_t)3,contours.size()) ;i++) {
-			//if (contourArea(contours[i]) < 300)
-			//	continue;
-			//drawContours(frame, contours, i,Scalar(255,0,0));
 			vector<Point> hull;
+//			Rect rect = boundingRect(contours[i]);
 			convexHull(contours[i], hull);
-			if (hull.size() > 0) {
-				vector<vector<Point>> hs;
-				hs.push_back(hull);
-				drawContours(frame,hs , 0, Scalar(0, 0, 255));
-			}
+			RotatedRect rect = fitEllipse(contours[i]);
+			ellipse(frame, rect, Scalar(0, 0, 255));
+//			if (hull.size() > 0) {
+//				vector<vector<Point>> hs;
+//				hs.push_back(hull);
+//				drawContours(frame,hs , 0, Scalar(0, 0, 255));
+//			}
+			
+//				rectangle(frame, rect, Scalar(0, 0, 255));
 		}
 
 		imshow(windowName, frame);
@@ -123,4 +126,6 @@ int main(int, char**)
 	// the camera will be deinitialized automatically in VideoCapture destructor
 	return 0;
 }
+
+//
 

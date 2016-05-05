@@ -17,8 +17,8 @@ BinarySegmentation::~BinarySegmentation()
 void BinarySegmentation::binarize(Mat input,OutputArray output, vector<Scalar> samples)
 {	
 	bool first = true;
+	Mat binarized(input.size(),CV_8U);
 	for (Scalar sample : samples) {
-		Mat binarized(input.size(),CV_8U);
 		tuple<Scalar, Scalar> lowerUpper = bounds(sample);
 		inRange(input, get<0>(lowerUpper),get<1>(lowerUpper), binarized);
 		if (first) {
@@ -27,7 +27,6 @@ void BinarySegmentation::binarize(Mat input,OutputArray output, vector<Scalar> s
 		}
 		else
 			add(binarized, output, output);
-		int nz = countNonZero(binarized);
 	}
 }
 
