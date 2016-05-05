@@ -37,6 +37,8 @@ int vmin = 10, vmax = 256, smin = 30;
 
 static void onMouse( int event, int x, int y, int, void* )
 {
+    
+
     if( selectObject )
     {
         selection.x = MIN(x, origin.x);
@@ -108,6 +110,18 @@ int main( int argc, const char** argv )
         cout << "***Could not initialize capturing...***\n";
         cout << "Current parameter's value: \n";
         parser.printMessage();
+        return -1;
+    }
+
+
+    Size S = Size((int) cap.get(CV_CAP_PROP_FRAME_WIDTH),    // Acquire input size
+                  (int) cap.get(CV_CAP_PROP_FRAME_HEIGHT));
+
+    VideoWriter videoStream;
+    videoStream.open("./VirtualPiano.mp4", -1, cap.get(CV_CAP_PROP_FPS), S, true);
+    if (!videoStream.isOpened())
+    {
+        cout  << "Could not open the output video." << endl;
         return -1;
     }
     cout << hot_keys;
@@ -216,12 +230,14 @@ int main( int argc, const char** argv )
             }
         }
 
-        imshow( "VirtualPiano", flippedImage); 
+        imshow( "VirtualPiano", image); 
+        videoStream.write( image);
         //imshow( "Histogram", histimg );
 
         char c = (char)waitKey(10);
-        if( c == 27 )
+        if( c == 27 ){
             break;
+        }
         switch(c)
         {
         case 'b':
